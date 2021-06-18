@@ -1,4 +1,4 @@
--- DROP SCHEMA universidade Cascade;
+DROP SCHEMA universidade Cascade;
 CREATE SCHEMA universidade;
 SET search_path TO universidade;
 
@@ -8,15 +8,20 @@ CREATE TABLE faculdade(
   numeroProfessores int,
   numeroAlunos int, 
   orcamento float,
-  idDiretor int,
-
-  -- Disciplinas oferecidas 
-  idDisciplina int,
 
   PRIMARY KEY (siglaFaculdade),
   UNIQUE (nomeBloco)
 );
 
+
+------------------------------------------------------
+CREATE TABLE diretor(                                 
+  idProfessor int,
+  siglaFaculdade varchar(8),
+
+  PRIMARY KEY (idProfessor, siglaFaculdade)
+);
+------------------------------------------------------
 
 CREATE TABLE aluno(
   telefone varchar(15),
@@ -30,7 +35,6 @@ CREATE TABLE aluno(
   PRIMARY KEY (idAluno),
   UNIQUE (nomeAluno)
 );
-
 
 CREATE TABLE professor(
   idProfessor int,
@@ -83,8 +87,8 @@ CREATE TABLE sala(
 
 -------- ALTER TABLES --------
 
-ALTER TABLE faculdade
-        ADD FOREIGN KEY (idDiretor) REFERENCES professor(idProfessor);
+-- ALTER TABLE faculdade
+--         ADD FOREIGN KEY (idDiretor) REFERENCES professor(idProfessor);
 
 ALTER TABLE professor
         ADD FOREIGN KEY (idTurma) REFERENCES turma(idTurma);
