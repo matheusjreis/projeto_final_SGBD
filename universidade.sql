@@ -1,4 +1,4 @@
-DROP SCHEMA universidade Cascade;
+-- DROP SCHEMA universidade Cascade;
 CREATE SCHEMA universidade;
 SET search_path TO universidade;
 
@@ -13,9 +13,8 @@ CREATE TABLE faculdade(
   -- Disciplinas oferecidas 
   idDisciplina int,
 
-  foreign key (idDiretor) REFERENCES professor(idProfessor),
-  primary key (siglaFaculdade),
-  unique (nomeBloco)
+  PRIMARY KEY (siglaFaculdade),
+  UNIQUE (nomeBloco)
 );
 
 
@@ -27,9 +26,9 @@ CREATE TABLE aluno(
   nomeAluno varchar(50),
   siglaFaculdade varchar(8),
 
-  foreign key (siglaFaculdade) REFERENCES faculdade(siglaFaculdade),  
-  primary key (idAluno),
-  unique (nomeAluno)
+  FOREIGN KEY (siglaFaculdade) REFERENCES faculdade(siglaFaculdade),  
+  PRIMARY KEY (idAluno),
+  UNIQUE (nomeAluno)
 );
 
 
@@ -41,9 +40,8 @@ CREATE TABLE professor(
   siglaFaculdade varchar(8),
   idTurma int,
 
-  foreign key (idTurma) REFERENCES turma(idTurma),
-  foreign key (siglaFaculdade) REFERENCES faculdade(siglaFaculdade),
-  primary key (idProfessor)
+  FOREIGN KEY (siglaFaculdade) REFERENCES faculdade(siglaFaculdade),
+  PRIMARY KEY (idProfessor)
 );
 
 
@@ -55,10 +53,10 @@ CREATE TABLE disciplina(
   siglaSuperDisciplina varchar(8),  --Pré-requisito
   siglaFaculdade varchar(8),
   
-  foreign key (siglaFaculdade) REFERENCES faculdade(siglaFaculdade),
-  foreign key (siglaSuperDisciplina) REFERENCES disciplina(siglaDisciplina),
-  primary key (siglaDisciplina),
-  foreign key (idResponsavel) REFERENCES professor(idProfessor)
+  FOREIGN KEY (siglaFaculdade) REFERENCES faculdade(siglaFaculdade),
+  FOREIGN KEY (siglaSuperDisciplina) REFERENCES disciplina(siglaDisciplina),
+  PRIMARY KEY (siglaDisciplina),
+  FOREIGN KEY (idResponsavel) REFERENCES professor(idProfessor)
 );
 
 
@@ -69,8 +67,8 @@ CREATE TABLE turma(
   idTurma int, 
   lugar varchar(20),
 
-  foreign key (lugar) REFERENCES faculdade(nomeBloco),
-  primary key (idTurma)
+  FOREIGN KEY (lugar) REFERENCES faculdade(nomeBloco),
+  PRIMARY KEY (idTurma)
 );
 
 
@@ -79,5 +77,14 @@ CREATE TABLE sala(
   numeroSala int,
   capacidadeSala int,
   
-  foreign key (nomeBloco) REFERENCES faculdade(nomeBloco)
+  FOREIGN KEY (nomeBloco) REFERENCES faculdade(nomeBloco)
 );
+
+
+-------- ALTER TABLES --------
+
+ALTER TABLE faculdade
+        ADD FOREIGN KEY (idDiretor) REFERENCES professor(idProfessor);
+
+ALTER TABLE professor
+        ADD FOREIGN KEY (idTurma) REFERENCES turma(idTurma);
