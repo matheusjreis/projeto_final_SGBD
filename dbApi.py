@@ -1,20 +1,32 @@
 import psycopg2
+from time import sleep
+import os
 from psycopg2 import Error
+
+def getPassword():
+    fileObj = open('senha.txt', 'r')
+
+    for line in fileObj:
+        password = line
+    return password
+    
 
 def pgconnect():
     connection = None
+    key = str(getPassword())
 
     try:
         connection = psycopg2.connect(user="matheus_reis99",
-                                      password="forfrodo",
+                                      password=key,
                                       host="200.131.206.13",
                                       port="5432",
                                       database="matheus_reis99")
 
     except (Exception, Error) as error:
-        print("Erro ao se conectar com o PostgreSQL", error)
+        print("033[31mErro ao se conectar com o PostgreSQL\033[m", error)
         return
     finally:
+        print('\033[32mSERVIDOR CONECTADO COM SUCESSO\033[m')
         return connection
 
 ############################################
@@ -47,7 +59,9 @@ def insereProfessor():
         theTable.execute(sqlInsert)
         pgconn.commit()
     except Exception as error:
-        print(" Não foi possível realizar a inserção --> {}".format(error))
+        print("\033[31m Não foi possível realizar a inserção --> \n{}\033[m".format(error))
+    finally:
+        print('\033[32m INSERÇÃO REALIZADA COM SUCESSO\033[m')
     return
 
 
@@ -70,7 +84,9 @@ def adicionaAtributo():
         theTable.execute(sqlAlter)
         pgconn.commit()
     except Exception as error:
-        print(" Não foi possível realizar a alteração --> {}".format(error))
+        print("\033[31m Não foi possível realizar a alteração --> \n{}\033[m".format(error))
+    finally:
+        print('\033[32m ALTERAÇÃO REALIZADA COM SUCESSO\033[m')
     return
 
 def dropAtributo():
@@ -89,7 +105,9 @@ def dropAtributo():
         theTable.execute(sqlAlter)
         pgconn.commit()
     except Exception as error:
-        print(" Não foi possível realizar a alteração --> {}".format(error))
+        print("\033[31m Não foi possível realizar a alteração --> \n{}\033[m".format(error))
+    finally:
+        print('\033[32m ALTERAÇÃO REALIZADA COM SUCESSO\033[m')
     return
 
 def excluiTupla():
@@ -109,7 +127,9 @@ def excluiTupla():
         theTable.execute(sqlDelete)
         pgconn.commit()
     except Exception as error:
-        print(" Não foi possível realizar a exclusão --> {}".format(error))
+        print("\033[31m Não foi possível realizar a exclusão --> \n{}\033[m".format(error))
+    finally:
+        print('\033[32m TUPLA EXCLUÍDA COM SUCESSO\033[m')
     return
 
 def consultaTodos():
@@ -133,7 +153,7 @@ def consultaTodos():
 
         pgconn.commit()
     except Exception as error:
-        print(" Não foi possível realizar a consultaEspecifico --> {}".format(error))
+        print("\033[31m Não foi possível realizar a consultaEspecifico --> \n{}\033[m".format(error))
     return
 
 def consultaEspecifico():
@@ -155,17 +175,20 @@ def consultaEspecifico():
 
         print('='*20)
         for row in myResult:
-            print(row[0])
+            print('\033[34m'+row[0]+'\033[m')
         print('='*20)
 
         pgconn.commit()
     except Exception as error:
-        print(" Não foi possível realizar a consultaEspecifico --> {}".format(error))
+        print("\033[31m Não foi possível realizar a consultaEspecifico --> \n{}\033[m".format(error))
     return
 
 if __name__ == "__main__":
     # Menu
     while True:
+        sleep(2)
+        system('cls' if os.name == 'nt' else 'clear')
+
         print('1 - Inserir Professor: ')
         print('2 - Adicionar Atributo: ')
         print('3 - Dropar Atributo: ')
@@ -174,7 +197,7 @@ if __name__ == "__main__":
         print('6 - Excluir Tupla: ')
         print('7 - Sair')
 
-        op = int(input("Digite uma opção: "))
+        op = int(input("\033[34mDigite uma opção: \033[m"))
 
         if(op == 1):
             insereProfessor()
@@ -189,7 +212,9 @@ if __name__ == "__main__":
         elif(op == 6):
             excluiTupla()
         elif(op == 7):
+            print('\033[34mSaindo . . .\033[m')
+            sleep(2)
             pgconn.close()
             break
         else:
-            print('Opção não existe')
+            print('\033[31mOpção não existe\033[m')
